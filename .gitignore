@@ -1,0 +1,17 @@
+# Obsidian
+.obsidian/
+
+# macOS
+.DS_Store
+
+# Node (if we add tooling later)
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Editor files
+*.swp
+*.swo
+*~
