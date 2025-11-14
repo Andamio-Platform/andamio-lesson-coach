@@ -19,7 +19,7 @@ The Andamio Lesson Coach bridges the gap between domain expertise and pedagogica
 
 ```bash
 # Clone and install
-git clone <repo-url>
+git clone https://github.com/Andamio-Platform/andamio-lesson-coach
 cd andamio-lesson-coach
 npm install
 
