@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "andamio-lesson-coach": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/Users/james/projects/01-projects/andamio-lesson-coach/build/index.js"
+      ],
+      "env": {}
+    }
+  }
+}
