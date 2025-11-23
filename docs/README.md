@@ -2,17 +2,38 @@
 
 ## Start Here
 
-⭐ **[QUICK-REFERENCE.md](./QUICK-REFERENCE.md)** - One-page overview of deployment options and immediate actions
+🚀 **[GETTING-STARTED.md](../GETTING-STARTED.md)** - Complete setup guide for developers (with local DB API) ⭐
 
-📋 **[SUMMARY.md](./SUMMARY.md)** - Full summary of all options with recommendations
+📋 **[TOOLS-REFERENCE.md](../TOOLS-REFERENCE.md)** - Comprehensive reference for all 13 MCP tools
+
+⭐ **[QUICK-REFERENCE.md](./QUICK-REFERENCE.md)** - One-page overview of deployment options
 
 ---
 
 ## Documentation Index
 
-### Quick Start
+### Setup & Installation
 
-- **[QUICK-START.md](./QUICK-START.md)** - Fast-track guide for getting started
+- **[GETTING-STARTED.md](../GETTING-STARTED.md)** - Complete setup guide ⭐
+  - Install & build
+  - Environment configuration
+  - Claude Desktop setup
+  - Quick tests and workflows
+  - Troubleshooting
+
+- **[TOOLS-REFERENCE.md](../TOOLS-REFERENCE.md)** - All 13 tools documented
+  - Parameter specifications
+  - Usage examples
+  - Workflow examples
+  - Error handling
+
+- **[API-INTEGRATION.md](../API-INTEGRATION.md)** - API integration details
+  - Setup instructions
+  - Available endpoints
+  - Content format conversion
+  - Troubleshooting
+
+- **[QUICK-START.md](./QUICK-START.md)** - Fast-track guide
   - Local development setup
   - Claude Desktop deployment
   - First lesson generation
@@ -78,6 +99,12 @@
   - Core principles for content generation
   - Development workflow
 
+- **[ENHANCEMENT-SUMMARY.md](../ENHANCEMENT-SUMMARY.md)** - Recent enhancements
+  - New API capabilities
+  - SLT and lesson management
+  - Technical implementation details
+  - Testing status
+
 ## Quick Links
 
 ### For Developers
@@ -92,8 +119,17 @@
 
 ## Current Status
 
-**Phase**: Phase 1 - MCP Scaffolding Complete
-**Status**: Ready for testing and Claude Desktop deployment
-**Next Steps**: Generate 10 test lessons to validate quality
+**Phase**: Phase 1+ Complete - MCP Server + Full API Integration
+**Status**: Ready for local development and testing
+**Features**:
+- ✅ 13 MCP tools (lesson generation + full CRUD for SLTs and lessons)
+- ✅ Automatic markdown ↔ Tiptap JSON conversion
+- ✅ Complete API integration with andamio-db-api
+- ✅ Comprehensive documentation
+
+**Next Steps**:
+1. Test with real course content
+2. Generate lessons and iterate on quality
+3. Validate workflows with content creators
 
 See [DEPLOYMENT-PLAN.md](./DEPLOYMENT-PLAN.md) for full roadmap.

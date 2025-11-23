@@ -5,6 +5,9 @@
  * - generate-lesson: Main lesson generation tool
  * - validate-slt: Validate Student Learning Target format
  * - suggest-lesson-type: Recommend lesson type for an SLT
+ * - fetch-lesson: Fetch a lesson from Andamio DB API
+ * - fetch-module-lessons: Fetch all lessons for a module
+ * - update-lesson: Update a lesson in Andamio DB API
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -13,6 +16,19 @@ import { generateProductDemo } from "./generators/product-demo.js";
 import { generateDeveloperDocs } from "./generators/developer-docs.js";
 import { generateHowToGuide } from "./generators/how-to-guide.js";
 import { generateOrgOnboarding } from "./generators/org-onboarding.js";
+import {
+  fetchLesson,
+  fetchModuleLessons,
+  updateLesson,
+  createLesson,
+  deleteLesson,
+  fetchModuleSLTs,
+  createSLT,
+  updateSLT,
+  batchUpdateSLTIndexes,
+  deleteSLT,
+} from "./api-client.js";
+import { tiptapToMarkdown, markdownToTiptap } from "./content-converters.js";
 
 // Lesson type enum
 const LessonType = z.enum([
@@ -300,5 +316,504 @@ export function registerTools(server: McpServer): void {
     }
   );
 
-  console.error("Registered MCP tools for lesson generation");
+  // Tool: fetch-lesson
+  server.tool(
+    "fetch-lesson",
+    "Fetch a lesson from the Andamio DB API and convert it to markdown for editing",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().describe("The SLT index (0-based)"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex }) => {
+      try {
+        const lesson = await fetchLesson(courseNftPolicyId, moduleCode, moduleIndex);
+
+        // Convert content to markdown
+        const markdownContent = lesson.contentJson
+          ? tiptapToMarkdown(lesson.contentJson)
+          : "";
+
+        let responseText = `# Lesson: ${lesson.title || "Untitled"}\n\n`;
+        responseText += `**SLT**: ${lesson.sltText}\n\n`;
+        responseText += `**Description**: ${lesson.description || "No description"}\n\n`;
+
+        if (lesson.imageUrl) {
+          responseText += `**Image URL**: ${lesson.imageUrl}\n\n`;
+        }
+
+        if (lesson.videoUrl) {
+          responseText += `**Video URL**: ${lesson.videoUrl}\n\n`;
+        }
+
+        responseText += `**Status**: ${lesson.live ? "Live" : "Draft"}\n\n`;
+        responseText += `---\n\n`;
+        responseText += `## Lesson Content (Markdown)\n\n`;
+        responseText += markdownContent || "*No content*";
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error fetching lesson:**\n\n${errorMessage}\n\n**Tip**: Make sure ANDAMIO_JWT_TOKEN is set in your .env file`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: fetch-module-lessons
+  server.tool(
+    "fetch-module-lessons",
+    "Fetch all lessons for a module from the Andamio DB API",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+    },
+    async ({ courseNftPolicyId, moduleCode }) => {
+      try {
+        const lessons = await fetchModuleLessons(courseNftPolicyId, moduleCode);
+
+        let responseText = `# Module Lessons: ${moduleCode}\n\n`;
+        responseText += `Found ${lessons.length} lesson(s)\n\n`;
+        responseText += `---\n\n`;
+
+        lessons.forEach((lesson, index) => {
+          responseText += `## ${index + 1}. ${lesson.title || "Untitled"}\n\n`;
+          responseText += `- **SLT Index**: ${lesson.sltIndex}\n`;
+          responseText += `- **SLT**: ${lesson.sltText}\n`;
+          responseText += `- **Status**: ${lesson.live ? "Live" : "Draft"}\n`;
+
+          if (lesson.description) {
+            responseText += `- **Description**: ${lesson.description}\n`;
+          }
+
+          responseText += `\n`;
+        });
+
+        responseText += `\n**Tip**: Use \`fetch-lesson\` to get the full content of a specific lesson for editing.`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error fetching module lessons:**\n\n${errorMessage}\n\n**Tip**: Make sure ANDAMIO_JWT_TOKEN is set in your .env file`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: update-lesson
+  server.tool(
+    "update-lesson",
+    "Update a lesson in the Andamio DB API. Provide markdown content which will be converted to Tiptap JSON.",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().describe("The SLT index (0-based)"),
+      title: z.string().optional().describe("Updated lesson title"),
+      description: z.string().optional().describe("Updated lesson description"),
+      markdownContent: z.string().optional().describe("Updated lesson content in markdown format"),
+      imageUrl: z.string().optional().describe("Updated image URL"),
+      videoUrl: z.string().optional().describe("Updated video URL"),
+      live: z.boolean().optional().describe("Whether the lesson is live (published) or draft"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex, title, description, markdownContent, imageUrl, videoUrl, live }) => {
+      try {
+        // Convert markdown to Tiptap JSON if provided
+        const contentJson = markdownContent
+          ? (markdownToTiptap(markdownContent) as unknown as Record<string, unknown>)
+          : undefined;
+
+        const result = await updateLesson(
+          courseNftPolicyId,
+          moduleCode,
+          moduleIndex,
+          {
+            title,
+            description,
+            contentJson,
+            imageUrl,
+            videoUrl,
+            live,
+          }
+        );
+
+        let responseText = `✅ **Lesson Updated Successfully**\n\n`;
+        responseText += `**Title**: ${result.title || "Untitled"}\n`;
+        responseText += `**Description**: ${result.description || "No description"}\n`;
+        responseText += `**Status**: ${result.live ? "Live" : "Draft"}\n\n`;
+
+        if (result.imageUrl) {
+          responseText += `**Image URL**: ${result.imageUrl}\n`;
+        }
+
+        if (result.videoUrl) {
+          responseText += `**Video URL**: ${result.videoUrl}\n`;
+        }
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error updating lesson:**\n\n${errorMessage}\n\n**Tip**: Make sure ANDAMIO_JWT_TOKEN is set in your .env file and you have permission to edit this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: create-lesson
+  server.tool(
+    "create-lesson",
+    "Create a new lesson for an existing SLT. Auto-generates title from SLT text if not provided. Provide markdown content which will be converted to Tiptap JSON.",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().describe("The SLT index (0-based)"),
+      title: z.string().optional().describe("Lesson title (defaults to SLT text if not provided)"),
+      description: z.string().optional().describe("Lesson description"),
+      markdownContent: z.string().optional().describe("Lesson content in markdown format"),
+      imageUrl: z.string().optional().describe("Image URL"),
+      videoUrl: z.string().optional().describe("Video URL"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex, title, description, markdownContent, imageUrl, videoUrl }) => {
+      try {
+        // Convert markdown to Tiptap JSON if provided
+        const contentJson = markdownContent
+          ? (markdownToTiptap(markdownContent) as unknown as Record<string, unknown>)
+          : undefined;
+
+        const result = await createLesson(
+          courseNftPolicyId,
+          moduleCode,
+          moduleIndex,
+          {
+            title,
+            description,
+            contentJson,
+            imageUrl,
+            videoUrl,
+          }
+        );
+
+        let responseText = `✅ **Lesson Created Successfully**\n\n`;
+        responseText += `**Title**: ${result.title || "Untitled"}\n`;
+        responseText += `**Description**: ${result.description || "No description"}\n`;
+        responseText += `**Status**: ${result.live ? "Live" : "Draft"}\n\n`;
+
+        if (result.imageUrl) {
+          responseText += `**Image URL**: ${result.imageUrl}\n`;
+        }
+
+        if (result.videoUrl) {
+          responseText += `**Video URL**: ${result.videoUrl}\n`;
+        }
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error creating lesson:**\n\n${errorMessage}\n\n**Tip**: Make sure the SLT exists and you have permission to create lessons for this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: delete-lesson
+  server.tool(
+    "delete-lesson",
+    "Delete a lesson from the Andamio DB API",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().describe("The SLT index (0-based)"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex }) => {
+      try {
+        await deleteLesson(courseNftPolicyId, moduleCode, moduleIndex);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `✅ **Lesson Deleted Successfully**\n\nDeleted lesson for SLT ${moduleIndex} in module ${moduleCode}`,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error deleting lesson:**\n\n${errorMessage}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // ============================================================================
+  // SLT Management Tools
+  // ============================================================================
+
+  // Tool: fetch-module-slts
+  server.tool(
+    "fetch-module-slts",
+    "Fetch all SLTs for a module from the Andamio DB API",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+    },
+    async ({ courseNftPolicyId, moduleCode }) => {
+      try {
+        const slts = await fetchModuleSLTs(courseNftPolicyId, moduleCode);
+
+        let responseText = `# Module SLTs: ${moduleCode}\n\n`;
+        responseText += `Found ${slts.length} SLT(s)\n\n`;
+        responseText += `---\n\n`;
+
+        slts.forEach((slt, index) => {
+          responseText += `## ${index + 1}. SLT ${slt.moduleIndex}\n\n`;
+          responseText += `- **ID**: ${slt.id}\n`;
+          responseText += `- **Text**: ${slt.sltText}\n\n`;
+        });
+
+        responseText += `\n**Tip**: Use \`create-lesson\` to create a lesson for any SLT that doesn't have one yet.`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error fetching module SLTs:**\n\n${errorMessage}`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: create-slt
+  server.tool(
+    "create-slt",
+    "Create a new SLT in a module (max 25 SLTs per module, indexed 0-24)",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().min(0).max(24).describe("The SLT index (0-24)"),
+      sltText: z.string().describe("The SLT text (should start with 'I can...')"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex, sltText }) => {
+      try {
+        const result = await createSLT(courseNftPolicyId, moduleCode, moduleIndex, sltText);
+
+        let responseText = `✅ **SLT Created Successfully**\n\n`;
+        responseText += `**ID**: ${result.id}\n`;
+        responseText += `**Module Index**: ${result.moduleIndex}\n`;
+        responseText += `**SLT Text**: ${result.sltText}\n\n`;
+        responseText += `**Next Step**: Use \`create-lesson\` to create a lesson for this SLT.`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error creating SLT:**\n\n${errorMessage}\n\n**Common issues:**\n- SLT with this index already exists\n- Module has reached max of 25 SLTs\n- You don't have permission to edit this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: update-slt
+  server.tool(
+    "update-slt",
+    "Update an SLT's text or reorder it by changing its moduleIndex",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().min(0).max(24).describe("The current SLT index"),
+      sltText: z.string().optional().describe("Updated SLT text"),
+      newModuleIndex: z.number().min(0).max(24).optional().describe("New module index (for reordering)"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex, sltText, newModuleIndex }) => {
+      try {
+        const result = await updateSLT(courseNftPolicyId, moduleCode, moduleIndex, {
+          sltText,
+          newModuleIndex,
+        });
+
+        let responseText = `✅ **SLT Updated Successfully**\n\n`;
+        responseText += `**ID**: ${result.id}\n`;
+        responseText += `**Module Index**: ${result.moduleIndex}\n`;
+        responseText += `**SLT Text**: ${result.sltText}\n`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error updating SLT:**\n\n${errorMessage}\n\n**Common issues:**\n- New moduleIndex already exists\n- SLT not found\n- You don't have permission to edit this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: batch-reorder-slts
+  server.tool(
+    "batch-reorder-slts",
+    "Batch update multiple SLT indexes at once (for reordering). Provide an array of {id, moduleIndex} pairs.",
+    {
+      updates: z.array(
+        z.object({
+          id: z.string().describe("The SLT ID"),
+          moduleIndex: z.number().min(0).max(24).describe("The new module index"),
+        })
+      ).describe("Array of SLT updates with id and new moduleIndex"),
+    },
+    async ({ updates }) => {
+      try {
+        const result = await batchUpdateSLTIndexes(updates);
+
+        let responseText = `✅ **SLTs Reordered Successfully**\n\n`;
+        responseText += `Updated ${result.count} SLT(s)\n\n`;
+        responseText += `**Tip**: Use \`fetch-module-slts\` to see the new order.`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: responseText,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error batch updating SLTs:**\n\n${errorMessage}\n\n**Common issues:**\n- Duplicate moduleIndexes in updates\n- SLTs don't all belong to the same module\n- You don't have permission to edit this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // Tool: delete-slt
+  server.tool(
+    "delete-slt",
+    "Delete an SLT and its lesson (if exists). Fails if the SLT is used in an assignment.",
+    {
+      courseNftPolicyId: z.string().describe("The course NFT policy ID"),
+      moduleCode: z.string().describe("The module code"),
+      moduleIndex: z.number().min(0).max(24).describe("The SLT index to delete"),
+    },
+    async ({ courseNftPolicyId, moduleCode, moduleIndex }) => {
+      try {
+        await deleteSLT(courseNftPolicyId, moduleCode, moduleIndex);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `✅ **SLT Deleted Successfully**\n\nDeleted SLT ${moduleIndex} from module ${moduleCode} (and its lesson if it existed)`,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error deleting SLT:**\n\n${errorMessage}\n\n**Common issues:**\n- SLT is used in an assignment (cannot delete)\n- SLT not found\n- You don't have permission to edit this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  console.error("Registered MCP tools for lesson generation and API integration");
 }

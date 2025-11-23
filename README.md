@@ -2,7 +2,9 @@
 
 An MCP (Model Context Protocol) server that provides AI-powered lesson generation for the Andamio platform.
 
-> **Status**: Phase 1 Complete - MCP server scaffolding built and ready for testing
+> **Status**: ✅ Phase 1+ Complete - Full implementation with API integration ready for use!
+>
+> See **[COMPLETION-SUMMARY.md](./COMPLETION-SUMMARY.md)** for the complete feature overview.
 
 ## Overview
 
@@ -15,25 +17,21 @@ The Andamio Lesson Coach bridges the gap between domain expertise and pedagogica
 
 ## Quick Start
 
-### Installation
+**For Developers (with andamio-db-api running locally):**
 
+See **[GETTING-STARTED.md](./GETTING-STARTED.md)** for the complete setup guide.
+
+**TL;DR:**
 ```bash
-# Clone and install
-git clone https://github.com/Andamio-Platform/andamio-lesson-coach
-cd andamio-lesson-coach
-npm install
+# 1. Install and build
+npm install && npm run build
 
-# Build the MCP server
-npm run build
-```
+# 2. Set up environment
+cp .env.example .env
+# Edit .env and add your JWT token
 
-### Usage with Claude Desktop
-
-Add to your Claude Desktop configuration:
-
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-```json
+# 3. Configure Claude Desktop
+# Add to ~/Library/Application Support/Claude/claude_desktop_config.json
 {
   "mcpServers": {
     "andamio-lesson-coach": {
@@ -42,9 +40,14 @@ Add to your Claude Desktop configuration:
     }
   }
 }
+
+# 4. Restart Claude Desktop and start using the tools!
 ```
 
-See [DEPLOY-TO-CLAUDE-DESKTOP.md](./docs/DEPLOY-TO-CLAUDE-DESKTOP.md) for detailed instructions.
+For detailed instructions, see:
+- **[GETTING-STARTED.md](./GETTING-STARTED.md)** - Complete setup with local DB API
+- **[DEPLOY-TO-CLAUDE-DESKTOP.md](./docs/DEPLOY-TO-CLAUDE-DESKTOP.md)** - Step-by-step deployment
+- **[TOOLS-REFERENCE.md](./TOOLS-REFERENCE.md)** - All 13 tools documented
 
 ## How It Works
 
@@ -75,9 +78,30 @@ Module = SLTs + Assignment
 
 ### Tools
 
+**Lesson Generation:**
 - **`validate-slt`** - Validates Student Learning Targets follow "I can..." format
 - **`suggest-lesson-type`** - Recommends appropriate lesson type based on SLT content
 - **`generate-lesson`** - Generates complete lesson from SLT and lesson type
+
+**Lesson API Integration:**
+- **`fetch-lesson`** - Fetch a lesson from Andamio DB API and convert to markdown
+- **`fetch-module-lessons`** - Fetch all lessons for a module from Andamio DB API
+- **`create-lesson`** - Create a new lesson for an existing SLT with markdown content
+- **`update-lesson`** - Update a lesson in Andamio DB API with markdown content
+- **`delete-lesson`** - Delete a lesson from the database
+
+**SLT Management:**
+- **`fetch-module-slts`** - Fetch all SLTs for a module
+- **`create-slt`** - Create a new SLT in a module (max 25 per module)
+- **`update-slt`** - Update an SLT's text or reorder it
+- **`batch-reorder-slts`** - Batch update multiple SLT indexes at once
+- **`delete-slt`** - Delete an SLT and its lesson (fails if used in an assignment)
+
+**Content Conversion:**
+- Automatic markdown ↔ Tiptap JSON conversion for all lesson operations
+- Preserves formatting, headings, lists, code blocks, links, and images
+
+See [API-INTEGRATION.md](./API-INTEGRATION.md) for API integration details.
 
 ### Prompts
 
@@ -237,14 +261,20 @@ npm test
 
 ## Documentation
 
-📚 **[Full Documentation](./docs/README.md)** - Complete documentation index
+📚 **[GETTING-STARTED.md](./GETTING-STARTED.md)** - Start here! Complete setup guide for developers
 
 **Quick Links:**
-- [Quick Start Guide](./docs/QUICK-START.md)
-- [Deploy to Claude Desktop](./docs/DEPLOY-TO-CLAUDE-DESKTOP.md)
-- [Deployment Plan](./docs/DEPLOYMENT-PLAN.md)
-- [Testing Checklist](./docs/TESTING-CHECKLIST.md)
-- [MCP Server Documentation](./MCP-SERVER.md)
+- [GETTING-STARTED.md](./GETTING-STARTED.md) - Complete setup with local DB API ⭐
+- [TOOLS-REFERENCE.md](./TOOLS-REFERENCE.md) - All 13 tools documented
+- [API-INTEGRATION.md](./API-INTEGRATION.md) - API integration details
+- [ENHANCEMENT-SUMMARY.md](./ENHANCEMENT-SUMMARY.md) - Recent enhancements
+- [MCP Server Documentation](./MCP-SERVER.md) - User-facing docs
+
+**More Documentation:**
+- [Full Documentation Index](./docs/README.md) - All documentation
+- [Quick Start Guide](./docs/QUICK-START.md) - Fast-track setup
+- [Deploy to Claude Desktop](./docs/DEPLOY-TO-CLAUDE-DESKTOP.md) - Step-by-step
+- [Testing Checklist](./docs/TESTING-CHECKLIST.md) - Quality assurance
 
 **Strategic Docs:**
 - [Decision Framework](./docs/DECISION-FRAMEWORK.md) - Choose your commercialization path

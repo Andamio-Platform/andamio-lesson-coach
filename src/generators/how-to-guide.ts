@@ -3,6 +3,12 @@
  *
  * Generates step-by-step procedural lessons.
  * Typical inputs: SLT + (optional) supporting materials
+ *
+ * CRITICAL CONSTRAINT: Maximum 600 words
+ * - If content exceeds 600 words, offer alternatives:
+ *   1. Split into multiple SLTs (recommended)
+ *   2. Create more succinct sections
+ *   3. Focus on essential steps only
  */
 
 export async function generateHowToGuide(

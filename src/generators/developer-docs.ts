@@ -3,6 +3,12 @@
  *
  * Generates technical lessons for developers integrating with Andamio.
  * Typical inputs: SLT + code snippet + documentation link
+ *
+ * CRITICAL CONSTRAINT: Maximum 600 words
+ * - If content exceeds 600 words, offer alternatives:
+ *   1. Split into multiple SLTs (recommended)
+ *   2. Create more succinct sections
+ *   3. Focus on essential concepts only
  */
 
 export async function generateDeveloperDocs(
