@@ -16,6 +16,7 @@ import { generateProductDemo } from "./generators/product-demo.js";
 import { generateDeveloperDocs } from "./generators/developer-docs.js";
 import { generateHowToGuide } from "./generators/how-to-guide.js";
 import { generateOrgOnboarding } from "./generators/org-onboarding.js";
+import { refineLesson } from "./generators/refine-lesson.js";
 import {
   fetchLesson,
   fetchModuleLessons,
@@ -808,6 +809,46 @@ export function registerTools(server: McpServer): void {
             {
               type: "text",
               text: `**Error deleting SLT:**\n\n${errorMessage}\n\n**Common issues:**\n- SLT is used in an assignment (cannot delete)\n- SLT not found\n- You don't have permission to edit this course`,
+            },
+          ],
+        };
+      }
+    }
+  );
+
+  // ============================================================================
+  // Lesson Refinement Tool
+  // ============================================================================
+
+  // Tool: refine-lesson
+  server.tool(
+    "refine-lesson",
+    "Refine an existing lesson based on user feedback. Takes current lesson content and specific feedback, returns improved version.",
+    {
+      slt: z.string().describe("The Student Learning Target for context"),
+      currentContent: z.string().describe("The current lesson content in markdown format"),
+      feedback: z.string().describe("Specific feedback about what to improve in the lesson"),
+      lessonType: LessonType.optional().describe("Optional lesson type for context"),
+    },
+    async ({ slt, currentContent, feedback, lessonType }) => {
+      try {
+        const refinedContent = await refineLesson(slt, currentContent, feedback, lessonType);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: refinedContent,
+            },
+          ],
+        };
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `**Error refining lesson:**\n\n${errorMessage}`,
             },
           ],
         };

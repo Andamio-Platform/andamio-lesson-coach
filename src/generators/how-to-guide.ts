@@ -4,11 +4,20 @@
  * Generates step-by-step procedural lessons.
  * Typical inputs: SLT + (optional) supporting materials
  *
- * CRITICAL CONSTRAINT: Maximum 600 words
- * - If content exceeds 600 words, offer alternatives:
+ * CRITICAL CONSTRAINTS: Maximum 900 words total
+ * - Main instructional content (up to "Verification" section): Maximum 600 words
+ * - Supplementary sections ("Common Issues", "Tips from Experience", etc.): Up to 300 additional words
+ * - If main content exceeds 600 words, offer alternatives:
  *   1. Split into multiple SLTs (recommended)
  *   2. Create more succinct sections
  *   3. Focus on essential steps only
+ *
+ * PEDAGOGICAL APPROACH: While how-to guides are naturally procedural,
+ * consider starting with a concrete example when possible:
+ * - Show the end result first
+ * - Demonstrate with a specific scenario
+ * - Then break down the steps
+ * - Apply to variations/edge cases
  */
 
 export async function generateHowToGuide(
@@ -34,9 +43,9 @@ The ability to ${lessonTitle} is a key capability for contributing to Projects. 
 
 Before you begin, make sure you have:
 
-- [ ] [Prerequisite 1]
-- [ ] [Prerequisite 2]
-- [ ] [Prerequisite 3]
+- [Prerequisite 1]
+- [Prerequisite 2]
+- [Prerequisite 3]
 
 [Course creator: List specific prerequisites based on the procedure]
 
@@ -100,9 +109,9 @@ ${materials ? `## Materials and Resources\n\n${materials}\n\n[Course creator: Ad
 
 You've successfully completed this procedure when:
 
-- [ ] [Success criterion 1]
-- [ ] [Success criterion 2]
-- [ ] [Success criterion 3]
+- [Success criterion 1]
+- [Success criterion 2]
+- [Success criterion 3]
 
 [Course creator: Add specific success criteria]
 

@@ -4,11 +4,20 @@
  * Generates technical lessons for developers integrating with Andamio.
  * Typical inputs: SLT + code snippet + documentation link
  *
- * CRITICAL CONSTRAINT: Maximum 600 words
- * - If content exceeds 600 words, offer alternatives:
+ * CRITICAL CONSTRAINTS: Maximum 900 words total
+ * - Main instructional content (up to "Testing Your Implementation" section): Maximum 600 words
+ * - Supplementary sections ("Troubleshooting", "Additional Resources", etc.): Up to 300 additional words
+ * - If main content exceeds 600 words, offer alternatives:
  *   1. Split into multiple SLTs (recommended)
  *   2. Create more succinct sections
  *   3. Focus on essential concepts only
+ *
+ * PEDAGOGICAL APPROACH: Specific Example → General Principles
+ * - Start with a concrete, real example
+ * - Show the complete code/implementation first
+ * - Explain what it does and what it doesn't do
+ * - Extract general principles from the example
+ * - Provide patterns and workflow based on the example
  */
 
 export async function generateDeveloperDocs(
@@ -22,61 +31,87 @@ export async function generateDeveloperDocs(
 
   return `# ${titleCase}
 
-## Student Learning Target
-
-${slt}
-
-## Why This Matters for Your Contribution
-
 The capability to ${lessonTitle} is critical for contributing to blockchain development projects. This technical knowledge enables you to [specific technical contribution context - to be customized by course creator].
 
-## Technical Overview
+## Example: [Specific Implementation]
 
-[Course creator: Provide technical context for this capability]
+[Course creator: Provide a concrete, real-world example from the codebase]
 
-### Key Concepts
+Here's a complete implementation from [source]:
 
-1. **Concept 1**: [Brief explanation]
-2. **Concept 2**: [Brief explanation]
-3. **Concept 3**: [Brief explanation]
+\`\`\`typescript
+${materials || `// [Course creator: Add complete code example here]
+// Show the actual implementation they'll work with
+// Include imports, full function/class definition, and key details`}
+\`\`\`
 
-## Implementation Guide
+**What this does:**
+[Course creator: Bullet points explaining the example]
+- [Key behavior 1]
+- [Key behavior 2]
+- [Key behavior 3]
 
-${materials ? `### Code Example\n\n\`\`\`typescript\n${materials}\n\`\`\`\n\n[Course creator: Add code comments and explanations]\n` : ""}
+**What this does NOT do:**
+[Course creator: Clarify boundaries and separation of concerns]
+- [Not responsibility 1]
+- [Not responsibility 2]
+- [Not responsibility 3]
 
-### Understanding the Implementation
+## Core Concepts
 
-[Course creator: Walk through the code/implementation step by step]
+[Course creator: Extract the key concepts from the example above]
 
-1. **Component 1**: [What it does and why]
-2. **Component 2**: [What it does and why]
-3. **Component 3**: [What it does and why]
+### 1. [Concept Name]
 
-### Integration Points
+[Explanation of concept with reference to the example]
 
-When contributing to projects, you'll integrate this capability with:
+\`\`\`typescript
+// Relevant snippet from example showing this concept
+\`\`\`
 
-- **System/Component 1**: [How it connects]
-- **System/Component 2**: [How it connects]
-- **System/Component 3**: [How it connects]
+### 2. [Concept Name]
+
+[Explanation of concept with reference to the example]
+
+\`\`\`typescript
+// Relevant snippet from example showing this concept
+\`\`\`
+
+### 3. [Concept Name]
+
+[Explanation of concept with reference to the example]
+
+\`\`\`typescript
+// Relevant snippet from example showing this concept
+\`\`\`
+
+## Implementation Workflow
+
+[Course creator: Based on the example above, provide step-by-step workflow]
+
+### Step 1: [First Action]
+
+[Explanation based on the example]
+
+### Step 2: [Next Action]
+
+[Explanation based on the example]
+
+### Step 3: [Continue...]
+
+[Explanation based on the example]
 
 ## Real-World Application
 
-### Use Case 1: [Specific Scenario]
-[Course creator: Describe a real project scenario where this capability is needed]
+### Applying This Pattern
 
-**Implementation:**
-\`\`\`
-[Code or commands]
-\`\`\`
+[Course creator: Show how the example pattern applies to other scenarios]
 
-### Use Case 2: [Another Scenario]
-[Course creator: Another real scenario]
+**Scenario 1: [Related Use Case]**
+[How to adapt the example for this scenario]
 
-**Implementation:**
-\`\`\`
-[Code or commands]
-\`\`\`
+**Scenario 2: [Another Use Case]**
+[How to adapt the example for this scenario]
 
 ## Best Practices
 
@@ -88,23 +123,36 @@ When you're contributing to projects, follow these practices:
 
 [Course creator: Add domain-specific best practices]
 
-## Common Patterns and Pitfalls
+## Common Patterns
 
-### ✅ Do This
-[Course creator: Show correct patterns]
+[Course creator: Extract patterns from the example]
 
-\`\`\`typescript
-// Good example
-[code]
-\`\`\`
-
-### ❌ Avoid This
-[Course creator: Show anti-patterns]
+### Pattern 1: [Pattern Name]
 
 \`\`\`typescript
-// Bad example
-[code]
+// Pattern from example
+[code snippet showing pattern]
 \`\`\`
+
+[When to use this pattern]
+
+### Pattern 2: [Pattern Name]
+
+\`\`\`typescript
+// Another pattern from example
+[code snippet showing pattern]
+\`\`\`
+
+[When to use this pattern]
+
+### Pattern 3: [Pattern Name]
+
+\`\`\`typescript
+// Third pattern from example
+[code snippet showing pattern]
+\`\`\`
+
+[When to use this pattern]
 
 ## Testing Your Implementation
 

@@ -4,11 +4,19 @@
  * Generates lessons for organizations getting started with Andamio.
  * Typical inputs: SLT + (optional) organization-specific context
  *
- * CRITICAL CONSTRAINT: Maximum 600 words
- * - If content exceeds 600 words, offer alternatives:
+ * CRITICAL CONSTRAINTS: Maximum 900 words total
+ * - Main instructional content (up to "Measuring Success" section): Maximum 600 words
+ * - Supplementary sections ("Resources", "Action Plan", "Common Challenges", etc.): Up to 300 additional words
+ * - If main content exceeds 600 words, offer alternatives:
  *   1. Split into multiple SLTs (recommended)
  *   2. Create more succinct sections
  *   3. Focus on essential phases only
+ *
+ * PEDAGOGICAL APPROACH: Case Study → Framework
+ * - Start with a success story or concrete example
+ * - Show how a similar organization accomplished this
+ * - Extract the framework/process they used
+ * - Apply to the learner's organizational context
  */
 
 export async function generateOrgOnboarding(
@@ -48,9 +56,9 @@ ${materials ? `## Organization-Specific Context\n\n${materials}\n\n[Course creat
 
 Before you begin, ensure:
 
-- [ ] [Organizational prerequisite 1]
-- [ ] [Organizational prerequisite 2]
-- [ ] [Organizational prerequisite 3]
+- [Organizational prerequisite 1]
+- [Organizational prerequisite 2]
+- [Organizational prerequisite 3]
 
 [Course creator: Add organization-specific prerequisites]
 
@@ -170,9 +178,9 @@ Based on successful implementations, organizations should:
 
 Your organization has successfully built this capability when:
 
-- [ ] [Organizational success metric 1]
-- [ ] [Organizational success metric 2]
-- [ ] [Organizational success metric 3]
+- [Organizational success metric 1]
+- [Organizational success metric 2]
+- [Organizational success metric 3]
 
 [Course creator: Define measurable organizational outcomes]
 

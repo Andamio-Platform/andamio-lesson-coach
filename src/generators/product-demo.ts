@@ -4,11 +4,19 @@
  * Generates lessons that show learners how to use Andamio Platform features.
  * Typical inputs: SLT + screenshot(s)
  *
- * CRITICAL CONSTRAINT: Maximum 600 words
- * - If content exceeds 600 words, offer alternatives:
+ * CRITICAL CONSTRAINTS: Maximum 900 words total
+ * - Main instructional content (up to "Try It Yourself" section): Maximum 600 words
+ * - Supplementary sections ("Troubleshooting", "Common Scenarios", etc.): Up to 300 additional words
+ * - If main content exceeds 600 words, offer alternatives:
  *   1. Split into multiple SLTs (recommended)
  *   2. Create more succinct sections
  *   3. Focus on essential steps only
+ *
+ * PEDAGOGICAL APPROACH: Show → Tell
+ * - Start with visual walkthrough (screenshots/recording)
+ * - Demonstrate the feature with a specific example
+ * - Break down what happened step-by-step
+ * - Apply to common scenarios
  */
 
 export async function generateProductDemo(
