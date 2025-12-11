@@ -186,22 +186,92 @@ This guide shows the language patterns that distinguish Andamio (contribution-ce
 When generating lesson content, ensure you:
 
 **✅ DO:**
-- Connect every concept to real contribution scenarios
-- Use "I can" statements for learning targets
-- Frame Assignments as proof of capability
-- Emphasize what learners can DO, not just know
-- Reference Projects as the context where learning matters
-- Use active, capability-building language
-- Explain WHY something matters for contribution
+* Connect every concept to real contribution scenarios
+* Use "I can" statements for learning targets
+* Frame Assignments as proof of capability
+* Emphasize what learners can DO, not just know
+* Reference Projects as the context where learning matters
+* Use active, capability-building language
+* Explain WHY something matters for contribution
+* Use asterisk (*) for unordered lists (not hyphens -)
+* Write brief 2-3 sentence introductions (not "Why This Matters for Your Contribution" headers)
+* Focus on UX flow in transaction walkthroughs (not deep technical implementation)
 
 **❌ AVOID:**
-- "Complete this lesson/module/course"
-- "Pass the test/quiz/exam"
-- "Learn about..." (passive framing)
-- Gamification language (streaks, badges, points)
-- Completion percentages disconnected from capability
-- Generic certificates or course completion
-- Learning for its own sake without contribution context
+* "Complete this lesson/module/course"
+* "Pass the test/quiz/exam"
+* "Learn about..." (passive framing)
+* Gamification language (streaks, badges, points)
+* Completion percentages disconnected from capability
+* Generic certificates or course completion
+* Learning for its own sake without contribution context
+* Re-stating the SLT in the lesson body
+* Markdown checkboxes (- [ ]) - use asterisks for all lists
+* Section headers like "Why This Matters for Your Contribution"
+* Deep technical implementation details in transaction flow lessons
+
+---
+
+## Formatting Patterns
+
+### Lesson Opening (Required Pattern)
+✅ **Correct:**
+```markdown
+# [Lesson Title]
+
+[2-3 sentence introduction that explains why this matters for contribution]
+
+## Prerequisites
+```
+
+❌ **Incorrect:**
+```markdown
+# [Lesson Title]
+
+## Student Learning Target
+
+I can [...]
+
+## Why This Matters for Your Contribution
+
+[Lengthy explanation...]
+```
+
+### List Formatting (Required Pattern)
+✅ **Use asterisks for all lists:**
+```markdown
+Prerequisites:
+* Item one
+* Item two
+* Item three
+```
+
+❌ **Never use hyphens or checkboxes:**
+```markdown
+Prerequisites:
+- Item one
+- [ ] Item two (checkbox)
+- Item three
+```
+
+### Transaction Lesson Pattern
+For lessons about testing transaction flows:
+
+✅ **Focus on UX:**
+```markdown
+1. Navigate to [page]
+2. Click [button]
+3. Sign transaction in wallet
+4. Verify [outcome in UI]
+```
+
+❌ **Don't go deep into implementation:**
+```markdown
+1. The onSubmit side effect executes
+2. Database state transitions to PENDING_TX
+3. Monitoring service polls blockchain
+4. The validator computes hash using...
+```
 
 ---
 

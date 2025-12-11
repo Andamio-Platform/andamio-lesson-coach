@@ -47,15 +47,15 @@ ${materials || `// [Course creator: Add complete code example here]
 
 **What this does:**
 [Course creator: Bullet points explaining the example]
-- [Key behavior 1]
-- [Key behavior 2]
-- [Key behavior 3]
+* [Key behavior 1]
+* [Key behavior 2]
+* [Key behavior 3]
 
 **What this does NOT do:**
 [Course creator: Clarify boundaries and separation of concerns]
-- [Not responsibility 1]
-- [Not responsibility 2]
-- [Not responsibility 3]
+* [Not responsibility 1]
+* [Not responsibility 2]
+* [Not responsibility 3]
 
 ## Core Concepts
 
@@ -176,9 +176,9 @@ Validate your capability by:
 
 ## Additional Resources
 
-- [Link to API documentation]
-- [Link to relevant GitHub repo]
-- [Link to examples in production projects]
+* [Link to API documentation]
+* [Link to relevant GitHub repo]
+* [Link to examples in production projects]
 
 [Course creator: Add specific documentation links]
 
@@ -196,9 +196,9 @@ You now have the technical capability to ${lessonTitle}. This expertise is essen
 
 ## Next Steps
 
-- Implement this in a test environment
-- Review the Module Assignment to see how you'll prove this capability
-- Explore how this integrates with other technical capabilities in this Module
+* Implement this in a test environment
+* Review the Module Assignment to see how you'll prove this capability
+* Explore how this integrates with other technical capabilities in this Module
 
 ---
 

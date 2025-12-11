@@ -3,12 +3,10 @@ courseNftPolicyId: "33fd1b80469f26abde6b721dd7a3e0dd351ba27890c7cd0855ca665f"
 lesson: "101.2"
 target_model: "how-to-guide"
 narrative: ""
-vision: ""
+vision: "Devs feel comfortable using the T3 App template. It's a place to experiment and test APIs. We want to make sure we have full coverage of API endpoints in this template."
 ---
 
 # Run the Andamio T3 App Template Locally
-
-## Why This Matters for Your Contribution
 
 The T3 App Template is your development environment for building and testing Andamio frontend features. Running it locally lets you see how API changes affect the UI, test new components, and develop features in the complete stack.
 
@@ -16,9 +14,9 @@ The T3 App Template is your development environment for building and testing And
 
 Before you begin, ensure you have:
 
-- Andamio DB API running on localhost:4000 (see previous lesson)
-- Cardano wallet browser extension installed (Eternl, Nami, Flint, etc.)
-- The andamio-platform-monorepo already cloned and set up
+* Andamio DB API running on localhost:4000 (see previous lesson)
+* Cardano wallet browser extension installed (Eternl, Nami, Flint, etc.)
+* The andamio-platform-monorepo already cloned and set up
 
 ## Overview
 
@@ -53,7 +51,7 @@ You have a configured `.env` file pointing to your local API.
 If you haven't run the setup scripts yet:
 ```bash
 cd ..  # Back to monorepo root
-npm install
+npm install # This is important to get @andamio/transactions loaded properly
 ```
 
 npm workspaces creates symlinks so the frontend can import types directly from the API package, giving you full type safety.
@@ -92,15 +90,21 @@ You're logged in and can see the main dashboard interface.
 
 ---
 
+### Step 5: Hot Tip - Get Your JWT
+
+After signing the authenticaion message, check your browser console. Here, you will find the JWT that can be used in the Swagger docs or in `andamio-lesson-coach`.
+
+---
+
 ## You'll Know You are Successful When:
 
 You've successfully set up the frontend when:
 
-- App loads at http://localhost:3000
-- You can connect your Cardano wallet
-- Authentication completes successfully
-- You can navigate the interface without errors
-- Console shows no API connection errors
+* App loads at http://localhost:3000
+* You can connect your Cardano wallet
+* Authentication completes successfully
+* You can navigate the interface without errors
+* Console shows no API connection errors
 
 ## Testing the Full Stack
 
@@ -120,16 +124,16 @@ In your code editor, open a component that uses API types. IntelliSense should s
 ### Issue: API connection failed / 404 errors
 **Why it happens:** API server isn't running or NEXT_PUBLIC_ANDAMIO_API_URL is wrong
 **How to fix it:**
-- Verify API is running: `curl http://localhost:4000/health`
-- Check `.env` has the exact URL: `http://localhost:4000/api/v0`
-- Restart the dev server after changing `.env`
+* Verify API is running: `curl http://localhost:4000/health`
+* Check `.env` has the exact URL: `http://localhost:4000/api/v0`
+* Restart the dev server after changing `.env`
 
 ### Issue: Wallet won't connect
 **Why it happens:** Browser extension not installed or wrong network
 **How to fix it:**
-- Verify you have a Cardano wallet extension installed
-- Switch wallet to Preprod network (matches NEXT_PUBLIC_NETWORK)
-- Try a different wallet extension if issues persist
+* Verify you have a Cardano wallet extension installed
+* Switch wallet to Preprod network (matches NEXT_PUBLIC_NETWORK)
+* Try a different wallet extension if issues persist
 
 ### Issue: Type errors in the code editor
 **Why it happens:** Workspace symlinks not created or API not built
@@ -177,10 +181,10 @@ You now have the complete Andamio development stack running locally: DB API + Fr
 
 ## Next Steps
 
-- Explore the UI and understand the navigation
-- Try creating test content (courses, modules)
-- Move on to learning about the transaction definition schema
-- Prepare to make your first API changes with full type safety
+* Explore the UI and understand the navigation
+* Try creating test content (courses, modules)
+* Move on to learning about the transaction definition schema
+* Prepare to make your first API changes with full type safety
 
 ---
 

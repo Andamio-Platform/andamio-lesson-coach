@@ -31,21 +31,15 @@ export async function generateHowToGuide(
 
   return `# ${titleCase}
 
-## Student Learning Target
-
-${slt}
-
-## Why This Matters for Your Contribution
-
 The ability to ${lessonTitle} is a key capability for contributing to Projects. This skill enables you to [specific contribution context - to be customized by course creator].
 
-## What You Need Before Starting
+## Prerequisites
 
 Before you begin, make sure you have:
 
-- [Prerequisite 1]
-- [Prerequisite 2]
-- [Prerequisite 3]
+* [Prerequisite 1]
+* [Prerequisite 2]
+* [Prerequisite 3]
 
 [Course creator: List specific prerequisites based on the procedure]
 
@@ -105,13 +99,13 @@ ${materials ? `## Materials and Resources\n\n${materials}\n\n[Course creator: Ad
 
 ---
 
-## Verification
+## You'll Know You are Successful When:
 
-You've successfully completed this procedure when:
+You've successfully completed this procedure when all of the following are true:
 
-- [Success criterion 1]
-- [Success criterion 2]
-- [Success criterion 3]
+* [Success criterion 1]
+* [Success criterion 2]
+* [Success criterion 3]
 
 [Course creator: Add specific success criteria]
 
@@ -123,15 +117,15 @@ When contributing to Projects, you'll use this procedure in scenarios like:
 [Course creator: Describe how this procedure applies in a real project]
 
 **Adaptation needed:**
-- [How the procedure might vary]
-- [What to adjust based on project needs]
+* [How the procedure might vary]
+* [What to adjust based on project needs]
 
 ### Scenario 2: [Another Context]
 [Course creator: Another real-world application]
 
 **Adaptation needed:**
-- [How the procedure might vary]
-- [What to adjust based on project needs]
+* [How the procedure might vary]
+* [What to adjust based on project needs]
 
 ## Common Issues and Solutions
 
@@ -169,9 +163,9 @@ You now have the capability to ${lessonTitle}. This procedural knowledge is esse
 
 ## Next Steps
 
-- Practice this procedure in different contexts
-- Review the Module Assignment to see how you'll demonstrate this capability
-- Consider how this procedure connects to other capabilities in this Module
+* Practice this procedure in different contexts
+* Review the Module Assignment to see how you'll demonstrate this capability
+* Consider how this procedure connects to other capabilities in this Module
 
 ---
 
